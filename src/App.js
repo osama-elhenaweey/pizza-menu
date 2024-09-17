@@ -64,54 +64,80 @@ function Header() {
     );
 }
 function Menu() {
+    const pizzas = pizzaData;
+    // const pizzas = [];
+    const numPizzas = pizzas.length;
     return (
         <main className="menu">
             <h2>Our Menu</h2>
-            {/*
-                  {
-    name: "Focaccia",
-    ingredients: "Bread with italian olive oil and rosemary",
-    price: 6,
-    photoName: "pizzas/focaccia.jpg",
-    soldOut: false,
-  }
-                */}
-            <ul>
-                {pizzaData.map((pizza) => (
-                    <Pizza
-                        key={pizza.name}
-                        name={pizza.name}
-                        image={pizza.photoName}
-                        price={pizza.price}
-                        ingredients={pizza.ingredients}
-                    />
-                ))}
-            </ul>
+            <>
+                <p>
+                    Authentic Italian cuisine. 6 creative dishes to choose from.
+                    All from our stone oven, all organic, all delicious.
+                </p>
+
+                <ul className="pizzas">
+                    {numPizzas > 0 ? (
+                        pizzas.map((pizza) => (
+                            <Pizza
+                                key={pizza.name}
+                                // name={pizza.name}
+                                // image={pizza.photoName}
+                                // price={pizza.price}
+                                // ingredients={pizza.ingredients}
+                                pizzaObj={pizza}
+                            />
+                        ))
+                    ) : (
+                        <p>We're still working in the menu</p>
+                    )}
+                </ul>
+            </>
         </main>
     );
 }
-function Pizza(props) {
+function Pizza({ pizzaObj }) {
+    // if (pizzaObj.soldOut) return null;
     return (
-        <li className="pizza">
-            <img src={props.image} alt="spinaci pizza" />
+        <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+            <img src={pizzaObj.photoName} alt="spinaci pizza" />
             <div>
-                <h3>{props.name}</h3>
-                <p>{props.ingredients}</p>
-                <span>{props.price}</span>
+                <h3>{pizzaObj.name}</h3>
+                <p>{pizzaObj.ingredients}</p>
+                <span>{pizzaObj.soldOut ? "Sold Out " : pizzaObj.price}</span>
             </div>
         </li>
     );
 }
 function Footer() {
     const hour = new Date().getHours();
-    const openningHour = 12;
+    const openingHour = 12;
     const closingHour = 22;
-    const isOpen = hour >= openningHour && hour <= closingHour;
+    const isOpen = hour >= openingHour && hour <= closingHour;
     console.log(isOpen);
     return (
         <footer className="footer">
-            {new Date().toLocaleTimeString()} We're currently open
+            {isOpen ? (
+                <Order closingHour={closingHour} />
+            ) : (
+                <p>
+                    We're happy to welcome you between {openingHour}:00 to{" "}
+                    {closingHour}:00{" "}
+                </p>
+            )}
         </footer>
+    );
+}
+function Order(props) {
+    return (
+        <div className="order">
+            <p>
+                {" "}
+                We're currently until {props.closingHour}:00 come visit us or
+                order online{" "}
+            </p>
+            <button className="btn">Order</button>
+        </div>
     );
 }
 export default App;
